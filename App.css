@@ -1,0 +1,54 @@
+import "./FoodCard.css";
+
+const FALLBACK_IMG = "https://via.placeholder.com/200x200?text=No+Image";
+
+function FoodCard({ product }) {
+  const name = product?.product_name || "Unknown Product";
+  const brand = product?.brands || "Unknown Brand";
+  const imageUrl = product?.image_front_small_url || product?.image_url || FALLBACK_IMG;
+  const nutrients = product?.nutriments || {};
+
+  const energy = nutrients["energy-kcal_100g"] ?? nutrients["energy-kcal"] ?? null;
+  const fat = nutrients["fat_100g"] ?? null;
+  const carbs = nutrients["carbohydrates_100g"] ?? null;
+  const protein = nutrients["proteins_100g"] ?? null;
+
+  const fmt = (val) => (val !== null ? `${Number(val).toFixed(1)}g` : "N/A");
+
+  return (
+    <article className="food-card">
+      <div className="food-card__img-wrap">
+        <img
+          src={imageUrl}
+          alt={name}
+          className="food-card__img"
+          onError={(e) => { e.currentTarget.src = FALLBACK_IMG; }}
+        />
+      </div>
+      <div className="food-card__body">
+        <h3 className="food-card__name">{name}</h3>
+        <p className="food-card__brand">{brand}</p>
+        <ul className="food-card__nutrients">
+          <li>
+            <span className="label">Energy</span>
+            <span className="value">{energy !== null ? `${Number(energy).toFixed(0)} kcal` : "N/A"}</span>
+          </li>
+          <li>
+            <span className="label">Fat</span>
+            <span className="value">{fmt(fat)}</span>
+          </li>
+          <li>
+            <span className="label">Carbs</span>
+            <span className="value">{fmt(carbs)}</span>
+          </li>
+          <li>
+            <span className="label">Protein</span>
+            <span className="value">{fmt(protein)}</span>
+          </li>
+        </ul>
+      </div>
+    </article>
+  );
+}
+
+export default FoodCard;
